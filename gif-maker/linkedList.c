@@ -22,11 +22,7 @@ FrameNode* createFrame(char name[], int duration , char path[])
 	if (newFrame->frame->name == NULL)
 	{
 		printf("Error! Unable to allocate memory!!\n");
-		return 1;
 	}
-
-	//needs to add a function to free the name field    free(newFrame->frame->name);
-
 
 	strcpy(newFrame->frame->name, name); // copying the given name to the new frame
 	newFrame->frame->duration = duration; // copying the given duration to the new frame
@@ -35,10 +31,8 @@ FrameNode* createFrame(char name[], int duration , char path[])
 	if (newFrame->frame->path == NULL)
 	{
 		printf("Error! Unable to allocate memory!!\n");
-		return 1;
 	}
 
-	//needs to add a function to free the path field  free(newFrame->frame->path);
 
 	strcpy(newFrame->frame->path, path); // copying the given path to the new frame
 
@@ -50,8 +44,8 @@ FrameNode* createFrame(char name[], int duration , char path[])
 
 
 /*
-Function will print a list of songs
-input: the list (the first person)
+Function will print a given list
+input: the list head
 output:
 none
 */
@@ -59,9 +53,10 @@ void printList(FrameNode* head)
 {
 	FrameNode* curr = head;
 
+	printf("                Name            Duration        Path");
 	while (curr) // when curr == NULL, that is the end of the list, and loop will end (NULL is false)
 	{
-		printf("Name: %s, duration: %d\n", curr->frame->name, curr->frame->duration);
+		printf("                %s               %d ms          %s", curr->frame->name, curr->frame->duration , curr->frame->path);
 		curr = curr->next;
 	}
 
@@ -69,9 +64,9 @@ void printList(FrameNode* head)
 
 
 /*
-Function will free all memory of a list of songs - RECURSIVELY!
+Function will free all memory of a list the list pointer and the list allocated memory like name and path 
 input:
-a list of songs
+a pointer to a head of a list
 output:
 none
 */
@@ -135,7 +130,7 @@ void deleteNode(FrameNode** head, char* name)
 	if (*head)
 	{
 		// the first node should be deleted?
-		if (0 == strcmp((*head)->name, name))
+		if (0 == strcmp((*head)->frame->name, name))
 		{
 			*head = (*head)->next;
 			free(curr);
@@ -144,11 +139,15 @@ void deleteNode(FrameNode** head, char* name)
 		{
 			while (curr)
 			{
-				if ((0 == strcmp(curr->next->name, name))) // waiting to be on the node BEFORE the one we want to delete
+				if ((0 == strcmp(curr->next->frame->name, name))) // waiting to be on the node BEFORE the one we want to delete
 				{
 					temp = curr->next; // put aside the node to delete
 					curr->next = temp->next; // link the node before it, to the node after it
+
+					free(temp->frame->name); // free the allocated name 
+					free(temp->frame->path); // free the allocated path
 					free(temp); // delete the node
+
 				}
 				else
 				{
@@ -159,6 +158,13 @@ void deleteNode(FrameNode** head, char* name)
 	}
 }
 
+/*
+this function will calculate the given list length
+Input:
+	a pointer to a lists head
+Output:
+	the given list length
+*/
 int listLength(FrameNode* head)
 {
 	if (head == NULL)
@@ -166,24 +172,4 @@ int listLength(FrameNode* head)
 		return 0;
 	}
 	return (1 + listLength(head->next));
-}
-
-FrameNode* copyList(FrameNode* head)
-{
-	FrameNode* newHead = NULL;
-	FrameNode* curr = head;
-	FrameNode* newNode = NULL;
-	int i = 0;
-
-	for (i = 0; i < listLength(head); i++)
-	{
-		newNode = createPerson(curr->name, curr->age);
-
-		insertAtEnd(&newHead, newNode);
-		curr = curr->next;
-
-	}
-
-
-	return newHead;
 }

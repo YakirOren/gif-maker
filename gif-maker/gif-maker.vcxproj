@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="editProject.c" />
     <ClCompile Include="linkedList.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="view.c" />

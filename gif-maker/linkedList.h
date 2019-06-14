@@ -21,14 +21,12 @@ typedef struct FrameNode
 } FrameNode;
 
 
-FrameNode* createFrame(char name[], int age);
+FrameNode* createFrame(char name[], int duration, char path[]);
 void printList(FrameNode* head);
 void insertAtEnd(FrameNode** head, FrameNode* newNode);
 void deleteNode(FrameNode** head, char* name);
 void freeListRecursive(FrameNode** head);
 int listLength(FrameNode* head);
-FrameNode* copyList(FrameNode* head);
-
 
 
 #endif

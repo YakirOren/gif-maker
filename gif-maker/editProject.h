@@ -6,5 +6,6 @@
 
 
 
+void printGUI();
 
 #endif

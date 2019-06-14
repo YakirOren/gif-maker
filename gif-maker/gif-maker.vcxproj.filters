@@ -24,6 +24,9 @@
     <ClCompile Include="linkedList.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="editProject.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="view.h">
