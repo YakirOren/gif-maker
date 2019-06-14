@@ -7,9 +7,9 @@
 // Frame struct
 typedef struct Frame
 {
-	char*		name;
-	unsigned int	duration;
-	char*		path;  
+	char* name;
+	unsigned int duration;
+	char* path;  
 } Frame;
 
 
@@ -19,5 +19,16 @@ typedef struct FrameNode
 	Frame* frame;
 	struct FrameNode* next;
 } FrameNode;
+
+
+FrameNode* createFrame(char name[], int age);
+void printList(FrameNode* head);
+void insertAtEnd(FrameNode** head, FrameNode* newNode);
+void deleteNode(FrameNode** head, char* name);
+void freeListRecursive(FrameNode** head);
+int listLength(FrameNode* head);
+FrameNode* copyList(FrameNode* head);
+
+
 
 #endif
