@@ -8,6 +8,8 @@
 
 int main(void)
 {
+	FrameNode* frameList = NULL;
+
 	
 	printGUI();
 	getchar();

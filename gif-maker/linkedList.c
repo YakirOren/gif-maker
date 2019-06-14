@@ -3,6 +3,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define SIZE_OF_NAME 100
+#define SIZE_OF_PATH 100
+
 
 /*
 Function is creating a new frame and returing a pointer to it
@@ -13,31 +16,50 @@ input:
 output:
 	a pointer to the new frame
 */
-FrameNode* createFrame(char name[], int duration , char path[])
+FrameNode* createFrame()
 {
 	FrameNode* newFrame = (FrameNode*)malloc(sizeof(FrameNode)); //creating a pointer to FrameNode 
+	char name[SIZE_OF_NAME] = { 0 };
+	int duration = 0;
+	char path[SIZE_OF_PATH] = { 0 };
+
+	
+	printf("*** Creating new frame ***\NPlease insert frame path:\n");//asking the user for the path of the frame
+	fgets(path, SIZE_OF_PATH, stdin);
+	path[strcspn(path, "\n")] = '\0'; // Getting rid of \n
+
+	newFrame->frame->path = (char*)malloc(sizeof(char) * strlen(path)); // dynamicly allocating memory for the path in the new frame
+	if (newFrame->frame->path == NULL)
+	{
+		printf("Error! Unable to allocate memory!!\n");
+		return NULL;
+	}
+
+	strcpy(newFrame->frame->path, path); // copying the given path to the new frame
+
+
+	printf("Please insert frame duration(in miliseconds):\n");//asking the user for duration of the frame 
+	scanf("%d", &duration);
+	getchar();	
+	newFrame->frame->duration = duration; // copying the given duration to the new frame
+	
+
+	printf("Please choose a name for that frame:\n"); //asking the user for a frame name
+	fgets(name, SIZE_OF_NAME, stdin);
+	name[strcspn(name, "\n")] = '\0'; // Getting rid of \n
 
 	newFrame->frame->name = (char*)malloc(sizeof(char) * strlen(name)); // dynamicly allocating memory for the name in the new frame
 
 	if (newFrame->frame->name == NULL)
 	{
 		printf("Error! Unable to allocate memory!!\n");
+		return NULL;
 	}
 
 	strcpy(newFrame->frame->name, name); // copying the given name to the new frame
-	newFrame->frame->duration = duration; // copying the given duration to the new frame
-
-	newFrame->frame->path = (char*)malloc(sizeof(char) * strlen(path)); // dynamicly allocating memory for the path in the new frame
-	if (newFrame->frame->path == NULL)
-	{
-		printf("Error! Unable to allocate memory!!\n");
-	}
-
-
-	strcpy(newFrame->frame->path, path); // copying the given path to the new frame
 
 	newFrame->next = NULL; // the next field in our new pointer is null
-	
+
 
 	return newFrame; //returning the a pointer to the new frame
 }
