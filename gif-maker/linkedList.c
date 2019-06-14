@@ -7,16 +7,47 @@
 #define SIZE_OF_PATH 100
 
 
+
+/*
+function will check if the given name is in the list
+
+input: pointer to head of linked list, string of name to search
+output: 1 if the name was found else 0
+function search for person in line ---- if find return 1 else 0
+*/
+int nameInList(FrameNode* head, char name[])
+{
+	int found = FALSE;
+	if (head != NULL)
+	{
+		if (strcmp(name, head->frame->name) == 0)
+		{
+			found = TRUE;
+		}
+		else if (head->next != NULL)
+		{
+			found = searchPerson(head->frame->name, name);
+		}
+		else
+		{
+			found = FALSE;
+		}
+	}
+	return found;
+
+}
+
+
 /*
 Function is creating a new frame and returing a pointer to it
 input:
-	name of frame
-	duration of frame
-	path of frame
+	FrameNode* head -  for checking if the name is already in the list
+
 output:
 	a pointer to the new frame
+	or NULL if the file in path couldnt be opened
 */
-FrameNode* createFrame()
+FrameNode* createFrame(FrameNode* head)
 {
 	FrameNode* newFrame = (FrameNode*)malloc(sizeof(FrameNode)); //creating a pointer to FrameNode 
 	char name[SIZE_OF_NAME] = { 0 };
@@ -27,41 +58,77 @@ FrameNode* createFrame()
 	printf("*** Creating new frame ***\NPlease insert frame path:\n");//asking the user for the path of the frame
 	fgets(path, SIZE_OF_PATH, stdin);
 	path[strcspn(path, "\n")] = '\0'; // Getting rid of \n
-
-	newFrame->frame->path = (char*)malloc(sizeof(char) * strlen(path)); // dynamicly allocating memory for the path in the new frame
-	if (newFrame->frame->path == NULL)
+	
+	FILE* path_file = fopen(path, "r");
+	if (path_file != NULL)
 	{
-		printf("Error! Unable to allocate memory!!\n");
-		return NULL;
-	}
+		fclose(path_file);
+		newFrame->frame->path = (char*)malloc(sizeof(char) * strlen(path)); // dynamicly allocating memory for the path in the new frame
+		if (newFrame->frame->path == NULL)
+		{
+			printf("Error! Unable to allocate memory!!\n");
+			return NULL;
+		}
 
-	strcpy(newFrame->frame->path, path); // copying the given path to the new frame
+		strcpy(newFrame->frame->path, path); // copying the given path to the new frame		
+
+	}
+	else
+	{
+		fclose(path_file);
+		free(newFrame);
+		newFrame = NULL; //if the the file in the given path can be opened we free the allocated memory and assign the newFrame to NULL 
+	}
+	
 
 
 	printf("Please insert frame duration(in miliseconds):\n");//asking the user for duration of the frame 
 	scanf("%d", &duration);
 	getchar();	
-	newFrame->frame->duration = duration; // copying the given duration to the new frame
+	if (newFrame != NULL)
+	{
+		newFrame->frame->duration = duration; // copying the given duration to the new frame
+	}
+	
 	
 
 	printf("Please choose a name for that frame:\n"); //asking the user for a frame name
 	fgets(name, SIZE_OF_NAME, stdin);
 	name[strcspn(name, "\n")] = '\0'; // Getting rid of \n
 
-	newFrame->frame->name = (char*)malloc(sizeof(char) * strlen(name)); // dynamicly allocating memory for the name in the new frame
-
-	if (newFrame->frame->name == NULL)
+	if ((newFrame != NULL))
 	{
-		printf("Error! Unable to allocate memory!!\n");
-		return NULL;
+
+		while (nameInList(head , name))
+		{
+			printf("The name is already taken, please enter another name\n"); //asking the user for a frame name
+			fgets(name, SIZE_OF_NAME, stdin);
+			name[strcspn(name, "\n")] = '\0'; // Getting rid of \n
+		}
+
+		if (!(nameInList(head , name)))
+		{
+			newFrame->frame->name = (char*)malloc(sizeof(char) * strlen(name)); // dynamicly allocating memory for the name in the new frame
+
+			if (newFrame->frame->name == NULL)
+			{
+				printf("Error! Unable to allocate memory!!\n");
+				return NULL;
+			}
+
+			strcpy(newFrame->frame->name, name); // copying the given name to the new frame		
+		}
+
+		newFrame->next = NULL; // the next field in our new pointer is null
 	}
 
-	strcpy(newFrame->frame->name, name); // copying the given name to the new frame
-
-	newFrame->next = NULL; // the next field in our new pointer is null
-
-
-	return newFrame; //returning the a pointer to the new frame
+	
+	if (newFrame == NULL)
+	{
+		printf("Can't find file! Frame will not be added");
+	}
+	
+	return newFrame; //returning the a pointer to the new frame or NULL if the file in path couldnt be opened
 }
 
 

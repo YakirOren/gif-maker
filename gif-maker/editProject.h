@@ -7,5 +7,6 @@
 
 
 void printGUI();
+int projectSelectGUI();
 
 #endif

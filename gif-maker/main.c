@@ -8,9 +8,13 @@
 
 int main(void)
 {
+	int mode = -1;
 	FrameNode* frameList = NULL;
 
-	
+	while ()
+	{
+
+	}
 	printGUI();
 	getchar();
 	return 0;
