@@ -26,7 +26,7 @@ int nameInList(FrameNode* head, char name[])
 		}
 		else if (head->next != NULL)
 		{
-			found = searchPerson(head->frame->name, name);
+			found = nameInList(head->frame->name, name);
 		}
 		else
 		{
@@ -54,8 +54,8 @@ FrameNode* createFrame(FrameNode* head)
 	int duration = 0;
 	char path[SIZE_OF_PATH] = { 0 };
 
-	
-	printf("*** Creating new frame ***\NPlease insert frame path:\n");//asking the user for the path of the frame
+	newFrame->frame = (Frame*)malloc(sizeof(Frame));
+	printf("*** Creating new frame ***\nPlease insert frame path:\n");//asking the user for the path of the frame
 	fgets(path, SIZE_OF_PATH, stdin);
 	path[strcspn(path, "\n")] = '\0'; // Getting rid of \n
 	
@@ -75,7 +75,6 @@ FrameNode* createFrame(FrameNode* head)
 	}
 	else
 	{
-		fclose(path_file);
 		free(newFrame);
 		newFrame = NULL; //if the the file in the given path can be opened we free the allocated memory and assign the newFrame to NULL 
 	}
@@ -125,7 +124,7 @@ FrameNode* createFrame(FrameNode* head)
 	
 	if (newFrame == NULL)
 	{
-		printf("Can't find file! Frame will not be added");
+		printf("Can't find file! Frame will not be added\n");
 	}
 	
 	return newFrame; //returning the a pointer to the new frame or NULL if the file in path couldnt be opened
@@ -142,10 +141,10 @@ void printList(FrameNode* head)
 {
 	FrameNode* curr = head;
 
-	printf("                Name            Duration        Path");
+	printf("                Name            Duration        Path\n");
 	while (curr) // when curr == NULL, that is the end of the list, and loop will end (NULL is false)
 	{
-		printf("                %s               %d ms          %s", curr->frame->name, curr->frame->duration , curr->frame->path);
+		printf("                %s               %d ms          %s\n", curr->frame->name, curr->frame->duration , curr->frame->path);
 		curr = curr->next;
 	}
 
@@ -261,4 +260,43 @@ int listLength(FrameNode* head)
 		return 0;
 	}
 	return (1 + listLength(head->next));
+}
+
+
+
+/*
+this function will change the duration where the name given match a frame
+Input:
+Output:
+*/
+void changeDuration(FrameNode** head, char* name , int newDuration)
+{
+	FrameNode* curr = *head;
+
+	// if the list is not empty (if list is empty - we cant change the duration)
+	if (*head)
+	{
+		if (0 == strcmp((*head)->frame->name, name))
+		{	
+			(*head)->frame->duration = newDuration;
+			
+		}
+		else
+		{
+			while (!(0 == strcmp(curr->next->frame->name, name)))
+			{
+				curr = curr->next;
+			}
+			if ((0 == strcmp(curr->next->frame->name, name)))
+			{
+				printf("curr->next->frame->duration %d", curr->next->frame->duration);
+				curr->next->frame->duration = newDuration;
+			}
+			else
+			{
+				curr = curr->next;
+			}
+			
+		}
+	}
 }

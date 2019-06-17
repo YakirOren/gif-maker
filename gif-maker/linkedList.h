@@ -21,6 +21,7 @@ typedef struct FrameNode
 } FrameNode;
 
 
+void changeDuration(FrameNode** head, char* name, int newDuration);
 FrameNode* createFrame(FrameNode* head);
 void printList(FrameNode* head);
 void insertAtEnd(FrameNode** head, FrameNode* newNode);

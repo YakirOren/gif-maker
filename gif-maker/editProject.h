@@ -6,7 +6,7 @@
 
 
 
-void printGUI();
+int editGUI();
 int projectSelectGUI();
 
 #endif
