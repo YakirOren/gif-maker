@@ -7,12 +7,22 @@
 #include "editProject.h"
 #define SIZE_OF_NAME 100
 
+#define EXIT 0 
+#define NEW_FRAME 1
+#define REMOVE_FRAME 2 
+#define CHANGE_INDEX 3
+#define CHANGE_DURATION 4
+#define CHANGE_DURATION_ALL 5
+#define LIST_FRAMES 6
+#define PLAY_LIST 7
+#define SAVE_PROJECT 8
+
 int main(void)
 {
 	int editMode = -1;
 	int projectMode = projectSelectGUI();
-	char frameName[SIZE_OF_NAME] = { 0 };
 	int newDuration = 0;
+	char frameName[SIZE_OF_NAME] = { 0 };
 
 	FrameNode* frameList = NULL;
 	FrameNode* newFrame = NULL;
@@ -24,11 +34,11 @@ int main(void)
 		switch (editMode)
 		{
 
-		case 0:
+		case EXIT:
 			printf("Bye!\n");
 			break;
 
-		case 1:
+		case NEW_FRAME:
 
 			newFrame = createFrame(frameList);
 
@@ -36,32 +46,21 @@ int main(void)
 			{
 				insertAtEnd(&frameList, newFrame);
 				printf("added!\n");
-				printList(frameList);
 			}
 			break;
 
-		case 2:
-			printf("Enter the name of the frame you wish to erase\n");
-			fgets(frameName, SIZE_OF_NAME, stdin);
-			frameName[strcspn(frameName, "\n")] = '\0'; // Getting rid of \n
-
-			if (!nameInList(frameList, frameName))
-			{
-				printf("The frame was not found");
-			}
-			else
-			{
-				deleteNode(&frameList, frameName);
-			}
+		case REMOVE_FRAME:
+			deleteNode(&frameList);
+			
 			break;
 
 
-		case 3:
+		case CHANGE_INDEX:
 			//needs to add a function for changing the index of a frame
 			break;
 
 
-		case 4:
+		case CHANGE_DURATION:
 			printf("enter the name of the frame\n");
 			fgets(frameName, SIZE_OF_NAME, stdin);
 			frameName[strcspn(frameName, "\n")] = '\0'; // Getting rid of \n
@@ -73,22 +72,39 @@ int main(void)
 			
 			break;
 		
-		case 5:
+		case CHANGE_DURATION_ALL:
 
+			
 
 			break;
 
-		case 6:
+		case LIST_FRAMES:
 
 			printList(frameList);
 			break;
+
+
+		case PLAY_LIST:
+			
+			play(frameList);
+			break;
+
+		case SAVE_PROJECT:
+
+			break;
+
+
+		default:
+			printf("bye!");
+			break;
+
 		}
 
 		
 	}
 
 	
-	
+	freeListRecursive(&frameList);
 	getchar();
 	return 0;
 }

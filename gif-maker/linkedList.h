@@ -25,7 +25,7 @@ void changeDuration(FrameNode** head, char* name, int newDuration);
 FrameNode* createFrame(FrameNode* head);
 void printList(FrameNode* head);
 void insertAtEnd(FrameNode** head, FrameNode* newNode);
-void deleteNode(FrameNode** head, char* name);
+void deleteNode(FrameNode** head);
 void freeListRecursive(FrameNode** head);
 int listLength(FrameNode* head);
 int nameInList(FrameNode* head, char name[]);

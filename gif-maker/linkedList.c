@@ -26,7 +26,7 @@ int nameInList(FrameNode* head, char name[])
 		}
 		else if (head->next != NULL)
 		{
-			found = nameInList(head->frame->name, name);
+			found = nameInList(head->next, name);
 		}
 		else
 		{
@@ -48,22 +48,32 @@ output:
 	or NULL if the file in path couldnt be opened
 */
 FrameNode* createFrame(FrameNode* head)
-{
-	FrameNode* newFrame = (FrameNode*)malloc(sizeof(FrameNode)); //creating a pointer to FrameNode 
+{	
 	char name[SIZE_OF_NAME] = { 0 };
 	int duration = 0;
 	char path[SIZE_OF_PATH] = { 0 };
+	FrameNode* newFrame = (FrameNode*)malloc(sizeof(FrameNode)); //creating a pointer to FrameNode 
+	if (newFrame == NULL)
+	{
+		printf("Error! Unable to allocate memory!!\n");
+		return NULL;
+	}
 
 	newFrame->frame = (Frame*)malloc(sizeof(Frame));
+	if (newFrame->frame == NULL)
+	{
+		printf("Error! Unable to allocate memory!!\n");
+		return NULL;
+	}
 	printf("*** Creating new frame ***\nPlease insert frame path:\n");//asking the user for the path of the frame
 	fgets(path, SIZE_OF_PATH, stdin);
 	path[strcspn(path, "\n")] = '\0'; // Getting rid of \n
 	
-	FILE* path_file = fopen(path, "r");
+	FILE* path_file = fopen(path, "rb");
 	if (path_file != NULL)
 	{
 		fclose(path_file);
-		newFrame->frame->path = (char*)malloc(sizeof(char) * strlen(path)); // dynamicly allocating memory for the path in the new frame
+		newFrame->frame->path = (char*)malloc(sizeof(char) * strlen(path)+1); // dynamicly allocating memory for the path in the new frame
 		if (newFrame->frame->path == NULL)
 		{
 			printf("Error! Unable to allocate memory!!\n");
@@ -107,7 +117,7 @@ FrameNode* createFrame(FrameNode* head)
 
 		if (!(nameInList(head , name)))
 		{
-			newFrame->frame->name = (char*)malloc(sizeof(char) * strlen(name)); // dynamicly allocating memory for the name in the new frame
+			newFrame->frame->name = (char*)malloc(sizeof(char) * strlen(name)+1); // dynamicly allocating memory for the name in the new frame
 
 			if (newFrame->frame->name == NULL)
 			{
@@ -169,6 +179,7 @@ void freeListRecursive(FrameNode** head)
 		
 		free((*head)->frame->name); //freeing the name field
 		free((*head)->frame->path); // freeing the path field
+		free((*head)->frame);
 		free(*head); // after freeing the other allocated 
 
 	}
@@ -203,47 +214,68 @@ void insertAtEnd(FrameNode** head, FrameNode* newNode)
 }
 
 /**
-Function will delete a specific person from a list of persons
+Function will delete a specific name from the frame list 
+the function will ask the user to enter a name and then the function will try to remove the name from the list
+if the name does not exist no harm will not be done
 input:
-the list (the first person), the person to delete
+	pointer to the head of the list
 output:
 none
 */
-void deleteNode(FrameNode** head, char* name)
+void deleteNode(FrameNode** head)
 {
 	FrameNode* curr = *head;
 	FrameNode* temp = NULL;
+	char name[SIZE_OF_NAME] = { 0 };
 
-	// if the list is not empty (if list is empty - nothing to delete!)
-	if (*head)
+	printf("Enter the name of the frame you wish to erase\n");
+	fgets(name, SIZE_OF_NAME, stdin);
+	name[strcspn(name, "\n")] = '\0'; // Getting rid of \n
+
+	if (!nameInList(curr, name))
 	{
-		// the first node should be deleted?
-		if (0 == strcmp((*head)->frame->name, name))
+		printf("The frame was not found\n");
+	}
+	else
+	{
+	// if the list is not empty (if list is empty - nothing to delete!)
+		if (*head)
 		{
-			*head = (*head)->next;
-			free(curr);
-		}
-		else
-		{
-			while (curr)
+			// the first node should be deleted?
+			if (0 == strcmp(curr->frame->name, name))
 			{
-				if ((0 == strcmp(curr->next->frame->name, name))) // waiting to be on the node BEFORE the one we want to delete
-				{
-					temp = curr->next; // put aside the node to delete
-					curr->next = temp->next; // link the node before it, to the node after it
+				*head = (*head)->next;
 
-					free(temp->frame->name); // free the allocated name 
-					free(temp->frame->path); // free the allocated path
-					free(temp); // delete the node
-
-				}
-				else
+				free(curr->frame->name); // free the allocated name 
+				free(curr->frame->path); // free the allocated path
+				free(curr->frame); //free the allocated frame
+				free(curr);// free the node
+			}
+			else
+			{
+				while (curr)
 				{
-					curr = curr->next;
+					if ((0 == strcmp(curr->next->frame->name, name))) // waiting to be on the node BEFORE the one we want to delete
+					{
+						temp = curr->next; // put aside the node to delete
+						curr->next = temp->next; // link the node before it, to the node after it
+
+						free(temp->frame->name); // free the allocated name 
+						free(temp->frame->path); // free the allocated path
+						free(temp->frame); //free the allocated frame
+						free(temp); // free the node
+
+					}
+					else
+					{
+						curr = curr->next;
+					}
 				}
 			}
 		}
 	}
+
+	
 }
 
 /*
