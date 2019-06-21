@@ -301,7 +301,12 @@ int listLength(FrameNode* head)
 /*
 this function will change the duration where the name given match a frame
 Input:
+	ptr to the head
+	name of frame
+	new duration
+
 Output:
+	NONE
 */
 void changeDuration(FrameNode** head, char* name , int newDuration)
 {
@@ -338,7 +343,13 @@ void changeDuration(FrameNode** head, char* name , int newDuration)
 	}
 }
 
-
+/*
+this function will change a duration for one frame 
+Input:
+	ptr to the head of the list
+Output:
+	none
+*/
 void changeDurationOne(FrameNode** head)
 {
 	FrameNode* curr = *head;
@@ -357,6 +368,13 @@ void changeDurationOne(FrameNode** head)
 }
 
 
+/*
+this function will change the doration for all frames in the list
+Input:
+	ptr to the head of the list
+Output:
+	none
+*/
 
 void changeDurationAll(FrameNode** head)
 {

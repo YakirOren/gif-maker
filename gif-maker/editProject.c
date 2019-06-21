@@ -25,6 +25,11 @@ int editGUI()
 
 }
 
+/*
+this function will print the gui of the poject mode to the user like a new project or load an existing one
+Input:
+Output:
+*/
 int projectSelectGUI()
 {
 	int projectMode = -1;
