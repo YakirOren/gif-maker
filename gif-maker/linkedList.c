@@ -227,6 +227,7 @@ void deleteNode(FrameNode** head)
 	FrameNode* curr = *head;
 	FrameNode* temp = NULL;
 	char name[SIZE_OF_NAME] = { 0 };
+	int deleted = FALSE;
 
 	printf("Enter the name of the frame you wish to erase\n");
 	fgets(name, SIZE_OF_NAME, stdin);
@@ -253,7 +254,7 @@ void deleteNode(FrameNode** head)
 			}
 			else
 			{
-				while (curr)
+				while ((curr->next) && (!deleted))
 				{
 					if ((0 == strcmp(curr->next->frame->name, name))) // waiting to be on the node BEFORE the one we want to delete
 					{
@@ -264,6 +265,7 @@ void deleteNode(FrameNode** head)
 						free(temp->frame->path); // free the allocated path
 						free(temp->frame); //free the allocated frame
 						free(temp); // free the node
+						deleted == TRUE;
 
 					}
 					else
@@ -308,27 +310,173 @@ void changeDuration(FrameNode** head, char* name , int newDuration)
 	// if the list is not empty (if list is empty - we cant change the duration)
 	if (*head)
 	{
-		if (0 == strcmp((*head)->frame->name, name))
-		{	
-			(*head)->frame->duration = newDuration;
-			
-		}
-		else
+		if (nameInList(curr , name))
 		{
-			while (!(0 == strcmp(curr->next->frame->name, name)))
-			{
-				curr = curr->next;
-			}
-			if ((0 == strcmp(curr->next->frame->name, name)))
-			{
-				printf("curr->next->frame->duration %d", curr->next->frame->duration);
-				curr->next->frame->duration = newDuration;
+			if (0 == strcmp((*head)->frame->name, name))
+			{	
+				(*head)->frame->duration = newDuration;
+			
 			}
 			else
 			{
-				curr = curr->next;
-			}
+				while (!(0 == strcmp(curr->next->frame->name, name)))
+				{
+					curr = curr->next;
+				}
+				if ((0 == strcmp(curr->next->frame->name, name)))
+				{
+					curr->next->frame->duration = newDuration;
+				}
+				else
+				{
+					curr = curr->next;
+				}
 			
+			}
 		}
+
 	}
 }
+
+
+void changeDurationOne(FrameNode** head)
+{
+	FrameNode* curr = *head;
+	int newDuration = 0;
+	char frameName[SIZE_OF_NAME] = { 0 };
+
+	printf("enter the name of the frame\n");
+	fgets(frameName, SIZE_OF_NAME, stdin);
+	frameName[strcspn(frameName, "\n")] = '\0'; // Getting rid of \n
+	printf("Enter the new duration\n");
+	scanf("%d", &newDuration);
+	getchar();
+
+	changeDuration(head, frameName, newDuration);
+
+}
+
+
+
+void changeDurationAll(FrameNode** head)
+{
+	FrameNode* curr = *head;
+	int newDuration = 0;
+
+	printf("Enter the new duration\n");
+	scanf("%d", &newDuration);
+	getchar();
+
+	if (*head)
+	{
+		while (curr)
+		{
+			changeDuration(head , curr->frame->name , newDuration);
+			curr = curr->next;
+		}
+
+	}
+
+}
+
+
+
+/*
+Function will change a index of a frame 
+input:
+	pointer to the head of the list
+output:
+none
+*/
+void changeFrameIndex(FrameNode** head)
+{
+	FrameNode* curr = *head;
+	FrameNode* temp = NULL;
+	char name[SIZE_OF_NAME] = { 0 };
+	int index = 0;
+	int i = 0;
+	int length = 0;
+	int changed = FALSE;
+
+	printf("enter the name of the frame\n");
+	fgets(name, SIZE_OF_NAME, stdin);
+	name[strcspn(name, "\n")] = '\0'; // Getting rid of \n
+
+	if (!nameInList(curr , name))
+	{
+		printf("this frame does not exist\n");
+	}
+	else
+	{
+		printf("Enter the new index in the movie you wish to place the frame\n");
+		scanf("%d", &index);
+		getchar();	
+		// if the list is not empty
+		if (*head)
+		{
+
+			if (0 == strcmp(curr->frame->name, name))
+			{
+
+				*head = (*head)->next;
+				temp = curr;
+				if (!(index > listLength(*head)))
+				{
+					for (i = 0; i < index; i++)
+					{
+						curr = curr->next;
+					}
+
+					temp->next = curr->next;
+					curr->next = temp;
+
+				}
+
+				
+			}
+			else
+			{
+				while (curr && !changed)
+				{
+					if ((0 == strcmp(curr->next->frame->name, name))) // waiting to be on the node BEFORE the one we want
+					{
+						temp = curr->next; // put aside the node
+						curr->next = temp->next; // link the node before it, to the node after it
+
+						curr = *head;
+
+						if (!(index > listLength(*head)))
+						{
+							for (i = 0; i < index - 1; i++)
+							{
+								curr = curr->next;
+							}
+
+							if (curr->next)
+							{
+								temp->next = curr->next;
+								curr->next = temp;
+								changed = TRUE;
+							}
+							else
+							{
+								printf("null or somthing\n");
+							}
+
+
+						}
+
+					
+					}
+					else
+					{
+						curr = curr->next;
+					}
+				}
+			}
+		}
+	}
+
+
+}
+
