@@ -77,7 +77,7 @@ int createFrameFromFile(FrameNode** head)
 
 		strcpy(newFrame->frame->name, name); // copying the given name to the new frame
 
-		printf("%s\n", newFrame->frame->name);
+		
 		currentLetter = 0;
 
 		currentLetter = fgetc(projectFile);
@@ -102,7 +102,7 @@ int createFrameFromFile(FrameNode** head)
 
 		strcpy(newFrame->frame->path, path); // copying the given path to the new frame	
 
-		printf("%s\n", newFrame->frame->path);
+		
 		currentLetter = 0;
 
 		currentLetter = fgetc(projectFile);
@@ -119,7 +119,6 @@ int createFrameFromFile(FrameNode** head)
 
 		newFrame->frame->duration = atoi(duration); // copying the given duration to the new frame
 
-		printf("%d\n", newFrame->frame->duration);
 
 		newFrame->next = NULL;
 
