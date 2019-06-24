@@ -7,7 +7,13 @@
 #define SIZE_OF_PATH 100
 #define SIZE_OF_DURATION 100
 
-
+/*
+this function handels making a list from a file
+Input:
+	prt to the head of a listq
+Output:
+	returns null if something bad hapend
+*/
 int createFrameFromFile(FrameNode** head)
 {
 	char name[SIZE_OF_NAME] = { 0 };
