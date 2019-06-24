@@ -32,4 +32,6 @@ int nameInList(FrameNode* head, char name[]);
 void changeDurationAll(FrameNode** head);
 void changeDurationOne(FrameNode** head);
 void changeFrameIndex(FrameNode** head);
+int saveProjectToFile(FrameNode** head);
+int createFrameFromFile(FrameNode** head);
 #endif

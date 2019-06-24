@@ -1,11 +1,177 @@
-#include "linkedList.h"
+﻿#include "linkedList.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
 #define SIZE_OF_NAME 100
 #define SIZE_OF_PATH 100
+#define SIZE_OF_DURATION 100
 
+
+int createFrameFromFile(FrameNode** head)
+{
+	char name[SIZE_OF_NAME] = { 0 };
+	char duration[SIZE_OF_DURATION] = {0};
+	char path[SIZE_OF_PATH] = { 0 };
+	char currentLetter = 0;
+	int currLen = 0;
+
+	printf("Enter the path of the project (including project name):\n");
+	fgets(path, SIZE_OF_PATH, stdin);
+	path[strcspn(path, "\n")] = '\0'; // Getting rid of \n
+
+	FILE* projectFile = fopen(path, "r");
+	if (projectFile == NULL)
+	{
+		printf("Error! Unable to open file!!\n");
+		return 1;
+	}
+	
+	
+	while (currentLetter != EOF) // not the end
+	{
+		memset(path, '\0', strlen(path));
+		memset(name, '\0', strlen(name));
+		memset(duration, '\0', strlen(duration));
+
+		FrameNode* newFrame = (FrameNode*)malloc(sizeof(FrameNode)); //creating a pointer to FrameNode 
+		if (newFrame == NULL)
+		{
+			printf("Error! Unable to allocate memory!!\n");
+			return NULL;
+		}
+
+		newFrame->frame = (Frame*)malloc(sizeof(Frame));
+		if (newFrame->frame == NULL)
+		{
+			printf("Error! Unable to allocate memory!!\n");
+			return NULL;
+		}
+
+		currentLetter = fgetc(projectFile);
+		while ((currentLetter != '•') && (currentLetter != EOF))
+		{
+			currLen = strlen(name);
+
+			if (currLen < SIZE_OF_NAME)
+			{
+				name[currLen] = currentLetter;
+				name[currLen + 1] = '\0';
+			}
+			currentLetter = fgetc(projectFile);
+
+		}
+		newFrame->frame->name = (char*)malloc(sizeof(char) * strlen(name) + 1); // dynamicly allocating memory for the name in the new frame
+
+		if (newFrame->frame->name == NULL)
+		{
+			printf("Error! Unable to allocate memory!!\n");
+			return NULL;
+		}
+
+		strcpy(newFrame->frame->name, name); // copying the given name to the new frame
+
+		printf("%s\n", newFrame->frame->name);
+		currentLetter = 0;
+
+		currentLetter = fgetc(projectFile);
+		while ((currentLetter != '•') && (currentLetter != EOF))
+		{
+			currLen = strlen(path);
+			if (currLen < SIZE_OF_NAME)
+			{
+				path[currLen] = currentLetter;
+				path[currLen + 1] = '\0';
+			}
+			currentLetter = fgetc(projectFile);
+		}
+
+		//get the path
+		newFrame->frame->path = (char*)malloc(sizeof(char) * strlen(path) + 1); // dynamicly allocating memory for the path in the new frame
+		if (newFrame->frame->path == NULL)
+		{
+			printf("Error! Unable to allocate memory!!\n");
+			return 1;
+		}
+
+		strcpy(newFrame->frame->path, path); // copying the given path to the new frame	
+
+		printf("%s\n", newFrame->frame->path);
+		currentLetter = 0;
+
+		currentLetter = fgetc(projectFile);
+		while ((currentLetter != '•') && (currentLetter != EOF))
+		{
+			currLen = strlen(duration);
+			if (currLen < SIZE_OF_NAME)
+			{
+				duration[currLen] = currentLetter;
+				duration[currLen + 1] = '\0';
+			}
+			currentLetter = fgetc(projectFile);
+		}
+
+		newFrame->frame->duration = atoi(duration); // copying the given duration to the new frame
+
+		printf("%d\n", newFrame->frame->duration);
+
+		newFrame->next = NULL;
+
+		insertAtEnd(head , newFrame);
+
+
+	}
+
+	fclose(projectFile); // move this near the return.
+}
+/*
+this function handels "saving" the project to file this means to have to write to file the values in the list so we would be able to read from it
+Input:
+	ptr to head of list
+Output:
+	none
+*/
+int saveProjectToFile(FrameNode** head)
+{
+	FrameNode* curr = *head;
+	char path[SIZE_OF_PATH] = { 0 };
+	char* buffer = 0;
+	int i= 0;
+	int length = 0;
+
+
+	printf("Where to save the project? enter a full path and file name\n");
+	fgets(path, SIZE_OF_PATH, stdin);
+	path[strcspn(path, "\n")] = '\0'; // Getting rid of \n
+
+	FILE* projectFile = fopen(path, "w");
+	if (projectFile == NULL)
+	{
+		printf("Error! Unable to open file!!\n");
+		return NULL;
+	}
+	else
+	{
+		length = listLength(*head);
+		for (i = 0; i < length; i++)
+		{
+			if (i == length - 1)
+			{
+				fprintf(projectFile, "%s•%s•%d", curr->frame->name, curr->frame->path, curr->frame->duration);
+			}
+			else
+			{
+				fprintf(projectFile , "%s•%s•%d•", curr->frame->name, curr->frame->path, curr->frame->duration);
+			}		
+			curr = curr->next;
+		}
+
+		
+		
+		fclose(projectFile); // move this near the return.
+	}
+
+}
 
 
 /*

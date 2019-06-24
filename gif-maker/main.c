@@ -29,77 +29,93 @@ int main(void)
 	FrameNode* frameList = NULL;
 	FrameNode* newFrame = NULL;
 	
-	while (editMode != 0)
-	{
-		editMode = editGUI();
-
-		switch (editMode)
+		while (editMode != 0)
 		{
-
-		case EXIT:
-			printf("Bye!\n");
-			break;
-
-		case NEW_FRAME:
-
-			newFrame = createFrame(frameList);
-
-			if (newFrame != NULL)
+			if (projectMode == 0)
 			{
-				insertAtEnd(&frameList, newFrame);
-				printf("added!\n");
+				editMode = editGUI();
+
+				switch (editMode)
+				{
+
+				case EXIT:
+					printf("Bye!\n");
+					break;
+
+				case NEW_FRAME:
+
+					newFrame = createFrame(frameList);
+
+					if (newFrame != NULL)
+					{
+						insertAtEnd(&frameList, newFrame);
+						printf("added!\n");
+					}
+					break;
+
+				case REMOVE_FRAME:
+					deleteNode(&frameList);
+			
+					break;
+
+
+				case CHANGE_INDEX:
+
+					changeFrameIndex(&frameList);
+
+
+					break;
+
+
+				case CHANGE_DURATION:
+					changeDurationOne(&frameList);
+			
+					break;
+		
+				case CHANGE_DURATION_ALL:
+
+					changeDurationAll(&frameList);
+
+					break;
+
+				case LIST_FRAMES:
+
+					printList(frameList);
+					break;
+
+
+				case PLAY_LIST:
+			
+					play(frameList);
+					break;
+
+				case SAVE_PROJECT:
+					saveProjectToFile(&frameList);
+					break;
+		
+
+				default:
+					printf("bye!");
+					break;
+
+				}
+
+		
 			}
-			break;
-
-		case REMOVE_FRAME:
-			deleteNode(&frameList);
-			
-			break;
-
-
-		case CHANGE_INDEX:
-
-			changeFrameIndex(&frameList);
-
-
-			break;
-
-
-		case CHANGE_DURATION:
-			changeDurationOne(&frameList);
-			
-			break;
-		
-		case CHANGE_DURATION_ALL:
-
-			changeDurationAll(&frameList);
-
-			break;
-
-		case LIST_FRAMES:
-
-			printList(frameList);
-			break;
-
-
-		case PLAY_LIST:
-			
-			play(frameList);
-			break;
-
-		case SAVE_PROJECT:
-
-			break;
-		
-
-		default:
-			printf("bye!");
-			break;
+			else
+			{
+				if (!createFrameFromFile(&frameList))
+				{
+					projectMode = 0;
+				}
+				else
+				{
+					projectMode = 1;
+				}
+				
+			}
 
 		}
-
-		
-	}
 
 	
 	freeListRecursive(&frameList);
