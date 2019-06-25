@@ -10,7 +10,7 @@
 /*
 this function handels making a list from a file
 Input:
-	prt to the head of a listq
+	prt to the head of a list
 Output:
 	returns null if something bad hapend
 */
@@ -358,10 +358,10 @@ void freeListRecursive(FrameNode** head)
 
 
 /*
-Function will add a person to the list
+Function will add a node to the end of the list
 input:
-firstNode - the first node of the lisr
-newNode - the new person to add to the list
+ptr to the head of the list
+newNode - the node to be added to the list
 output:
 none
 */
